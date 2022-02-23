@@ -20,6 +20,7 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
+    public $rememberMe = true;
     /**
      * {@inheritdoc}
      */
@@ -78,6 +79,29 @@ class User extends ActiveRecord implements IdentityInterface
     public function validateAuthKey($auth_key)
     {
         return $this->auth_key === $auth_key;
+    }
+
+    public static function findByEmail($email)
+    {
+        return self::findOne(["email" => $email]);
+    }
+
+    public function validatePassword($passwordHash)
+    {
+        return Yii::$app->getSecurity()->validatePassword($this->password, $passwordHash);
+    }
+
+    public function login()
+    {
+        $user = $this->findByEmail($this->email);
+        if ($user && $this->validatePassword($user->password))
+        {
+            return Yii::$app->user->login($user, $this->rememberMe ? 3600*24*30 : 0);
+        }else
+        {
+            $this->addError('password', 'Incorrect username or password.');
+        }
+
     }
 
 }

@@ -1,8 +1,8 @@
 <?php
 
-/** @var yii\web\View $this */
-/** @var yii\bootstrap4\ActiveForm $form */
-/** @var app\models\LoginForm $model */
+/* @var $this yii\web\View */
+/* @var $form yii\bootstrap4\ActiveForm */
+/* @var $model app\models\LoginForm */
 
 use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
@@ -12,8 +12,8 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-login">
 
-        <?php
-        $session = Yii::$app->session;
+    <?php
+         $session = Yii::$app->session;
 
         if($session->hasFlash('errorMessage'))
         {
@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
             $success = $session->getFlash('successMessage');
             echo "<div class='alert alert-primary' role='alert'>$success</div>";
         }
-        ?>
+    ?>
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -48,11 +48,11 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
 
-        <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+        <?= $form->field($user, 'email')->input('email') ?>
 
-        <?= $form->field($model, 'password')->passwordInput() ?>
+        <?= $form->field($user, 'password')->passwordInput() ?>
 
-        <?= $form->field($model, 'rememberMe')->checkbox([
+        <?= $form->field($user, 'rememberMe')->checkbox([
             'template' => "<div class=\"offset-lg-1 col-lg-3 custom-control custom-checkbox\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
         ]) ?>
 
@@ -63,9 +63,4 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
 
     <?php ActiveForm::end(); ?>
-
-    <div class="offset-lg-1" style="color:#999;">
-        You may login with <strong>admin/admin</strong> or <strong>demo/demo</strong>.<br>
-        To modify the username/password, please check out the code <code>app\models\User::$users</code>.
-    </div>
 </div>

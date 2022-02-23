@@ -73,19 +73,29 @@ class SiteController extends Controller
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+            return $this->redirect(["result/dashboard"]);
         }
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+        $request = Yii::$app->request->post();
+        $user = new User();
+        if($request)
+        {
+            if ($user->load($request) && $user->login())
+            {
+                return $this->redirect(["result/dashboard"]);
+            }
+
+            $session = Yii::$app->session;
+            $session->setFlash('errorMessages', $user->getErrors());
         }
 
-        $model->password = '';
+
+        $user->password = '';
         return $this->render('login', [
-            'model' => $model,
+            'user' => $user,
         ]);
     }
+
 
     /**
      * Logout action.
