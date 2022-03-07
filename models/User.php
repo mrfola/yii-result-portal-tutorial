@@ -81,9 +81,12 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->auth_key === $auth_key;
     }
 
-    public static function findByEmail($email)
+    public static function findByUserEmail($email)
     {
-        return self::findOne(["email" => $email]);
+        return self::findOne([
+            "email" => $email,
+            "user_type" => "user"
+        ]);
     }
 
     public function validatePassword($passwordHash)
@@ -93,7 +96,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function login()
     {
-        $user = $this->findByEmail($this->email);
+        $user = $this->findByUserEmail($this->email);
         if ($user && $this->validatePassword($user->password))
         {
             return Yii::$app->user->login($user, $this->rememberMe ? 3600*24*30 : 0);
