@@ -104,7 +104,27 @@ class User extends ActiveRecord implements IdentityInterface
         {
             $this->addError('password', 'Incorrect username or password.');
         }
-
     }
+
+    public static function findByAdminEmail($email)
+    {
+        return self::findOne([
+            "email" => $email,
+            "user_type" => "admin"
+        ]);
+    }
+
+    public function adminLogin()
+    {
+        $user = $this->findByAdminEmail($this->email);
+        if ($user && $this->validatePassword($user->password))
+        {
+            return Yii::$app->user->login($user, $this->rememberMe ? 3600*24*30 : 0);
+        }else
+        {
+            $this->addError('password', 'Incorrect username or password.');
+        }
+    }
+
 
 }
