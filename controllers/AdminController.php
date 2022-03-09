@@ -7,6 +7,7 @@ use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\Response;
 use app\models\User;
+use app\models\Result;
 use Yii;
 
 
@@ -69,16 +70,23 @@ class AdminController extends Controller
         return $this->render('index');
     }
 
+
     public function actionDashboard()
     {
         if (\Yii::$app->user->can('viewResultDashboard'))
-         {
-                return $this->render('dashboard');
-          }else
+        {
+            //get all students from db
+            $studentResults = User::getAllResults();
+
+            $data = ["students" => $studentResults];
+
+            return $this->render('dashboard', $data);
+        }else
         {
             return "You are not authorized to view this page.";
         }
     }
+
 
     /**
      * Login action.
@@ -124,5 +132,43 @@ class AdminController extends Controller
 
          return $this->redirect(["admin/index"]);
     }
+
+    public function actionUpdateUserResult()
+    {
+        if (\Yii::$app->user->can('updateResult'))
+        {
+        $request = Yii::$app->request->post();
+        $user_id = $request["user_id"];
+        unset($request["user_id"]);
+
+        //loop through all subjects and update each one.
+        foreach($request as $subject_id => $score)
+        {
+            //to ignore the csrf field
+            if(!is_int($subject_id))
+            {
+                continue;
+            }
+
+            $result = Result::findOne([
+                "user_id" => $user_id,
+                "subject_id" => $subject_id
+            ]);
+
+            $result->score = $score;
+            $result->save();
+        }
+
+        $session = Yii::$app->session;
+        $session->setFlash('successMessage', "Result Updated");
+        return $this->redirect(["admin/dashboard"]);
+
+        }else
+        {
+            return "You are not authorized to view this page.";
+        }
+
+    }
+
 
 }

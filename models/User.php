@@ -5,6 +5,8 @@ namespace app\models;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use app\models\Result;
+use app\models\Subject;
 
 /**
  * This is the model class for table "users".
@@ -125,5 +127,55 @@ class User extends ActiveRecord implements IdentityInterface
             $this->addError('password', 'Incorrect username or password.');
         }
     }
+
+    public function getResults()
+    {
+        return $this->hasMany(Result::className(), ['user_id' => 'id']);
+    }
+
+    public function createDefaultUserResult($id)
+    {   
+        //get all subjects
+        $subjects = Subject::find()->all();
+
+         //save result for each subject
+         foreach($subjects as $subject)
+         {
+            $result = new Result();
+            $result->user_id = $id;
+            $result->score = 0;
+            $result->subject_id = $subject->id;
+            $result->save();
+         }
+    }
+
+    public static function getAllResults()
+    {
+        $students = self::find()->where(["user_type" => "user"])->all();
+
+        $studentResults = [];
+        foreach($students as $index => $student)
+        {
+            $studentResult["id"] = $student->id;
+            $studentResult["name"] = $student->name;
+
+            //get individual result and add it to new array
+            foreach($student->results as $result)
+            {
+                $studentResult["subjects"][$result->subject->name] = 
+                [
+                    "subject_id" => $result->subject->id,
+                    "score" => $result->score 
+                ];
+
+            }
+
+            //add new student array to the larger array containing all students
+            $studentResults[] = $studentResult;
+        }
+
+        return $studentResults;
+    }
+
 
 }
