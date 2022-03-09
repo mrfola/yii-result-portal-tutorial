@@ -12,6 +12,10 @@ use Yii;
 
 class AdminController extends Controller
 {
+
+    //override default layout and use admin.php instead
+    public $layout = 'admin';
+
     /**
      * {@inheritdoc}
      */
@@ -20,8 +24,13 @@ class AdminController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                'only' => ['logout', 'dashboard'],
                 'rules' => [
+                    [
+                        'actions' => ['dashboard'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
                     [
                         'actions' => ['logout'],
                         'allow' => true,
@@ -37,6 +46,7 @@ class AdminController extends Controller
             ],
         ];
     }
+
 
     /**
      * {@inheritdoc}
@@ -54,10 +64,20 @@ class AdminController extends Controller
         ];
     }
 
-    // Use a middleware or guard to protect function
+    public function actionIndex()
+    {
+        return $this->render('index');
+    }
+
     public function actionDashboard()
     {
-        return $this->render('dashboard');
+        if (\Yii::$app->user->can('viewResultDashboard'))
+         {
+                return $this->render('dashboard');
+          }else
+        {
+            return "You are not authorized to view this page.";
+        }
     }
 
     /**
@@ -68,9 +88,9 @@ class AdminController extends Controller
 
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest && Yii::$app->user->identity->user_type=="admin")
+        if (!Yii::$app->user->isGuest)
         {
-            return $this->redirect(["result/dashboard"]);
+            return $this->redirect(["admin/dashboard"]);
         }
 
         $request = Yii::$app->request->post();
@@ -102,7 +122,7 @@ class AdminController extends Controller
     {
         Yii::$app->user->logout();
 
-        return $this->goHome();
+         return $this->redirect(["admin/index"]);
     }
 
 }

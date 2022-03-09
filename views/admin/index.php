@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Admin Home Page</title>
 </head>
 <body>
-    <h1>Admin Dashboard</h1>
+
+<div class="container">
+    <h1>Admin Home Page</h1>
+</div>
+
 </body>
 </html>
