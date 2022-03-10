@@ -28,8 +28,8 @@ AppAsset::register($this);
 <header>
 <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
+        'brandLabel' => "ResultPortal",
+        'brandUrl' => "ResultPortal",
         'options' => [
             'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
         ],
@@ -70,11 +70,10 @@ AppAsset::register($this);
 
 <footer class="footer mt-auto py-3 text-muted">
     <div class="container">
-        <p class="float-left">&copy; My Company <?= date('Y') ?></p>
-        <p class="float-right"><?= Yii::powered() ?></p>
+        <p class="float-left">&copy; Result Portal <?= date('Y') ?></p>
+        <p class="float-right"><a href="https://mrfola.hashnode.dev/">Powered By Mr Fola</a></p>
     </div>
 </footer>
-
 <?php $this->endBody() ?>
 </body>
 </html>
