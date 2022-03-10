@@ -21,8 +21,13 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                'only' => ['logout', 'dashboard'],
                 'rules' => [
+                    [
+                        'actions' => ['dashboard'],
+                        'allow' => true,
+                        'roles' => ['@']
+                    ],
                     [
                         'actions' => ['logout'],
                         'allow' => true,
@@ -73,7 +78,7 @@ class SiteController extends Controller
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
-            return $this->redirect(["result/dashboard"]);
+            return $this->redirect(["site/dashboard"]);
         }
 
         $request = Yii::$app->request->post();
@@ -82,7 +87,7 @@ class SiteController extends Controller
         {
             if ($user->load($request) && $user->login())
             {
-                return $this->redirect(["result/dashboard"]);
+                return $this->redirect(["site/dashboard"]);
             }
 
             $session = Yii::$app->session;
@@ -160,5 +165,9 @@ class SiteController extends Controller
         return $this->redirect(['site/register']);
     }
 
+    public function actionDashboard()
+    {
+        return $this->render('dashboard');
+    }
 
 }
