@@ -28,8 +28,8 @@ AppAsset::register($this);
 <header>
 <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
+        'brandLabel' => "ResultPortal",
+        'brandUrl' => "ResultPortal",
         'options' => [
             'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
         ],
