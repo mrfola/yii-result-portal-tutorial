@@ -10,6 +10,7 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\User;
+use app\models\Result;
 
 class SiteController extends Controller
 {
@@ -167,7 +168,24 @@ class SiteController extends Controller
 
     public function actionDashboard()
     {
-        return $this->render('dashboard');
+        $user_id = Yii::$app->user->identity->id;
+        $results = Result::findAll(["user_id" => $user_id]);;
+
+        $resultsCollection = [];
+
+        foreach($results as $result)
+        {
+            $subject = $result->subject->name;
+            $resultArray = 
+            [
+                "subject" => $subject,
+                "score" => $result->score
+            ];
+            $resultsCollection[] = $resultArray;
+        }
+        $data = ["results" => $resultsCollection];
+        return $this->render('dashboard', $data);
     }
+
 
 }
