@@ -82,3 +82,13 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+.dashboard 
+{
+    margin-top: 20px;
+}
+
+.student-results
+{
+    margin-top: 50px;
+}
