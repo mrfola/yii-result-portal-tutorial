@@ -89,7 +89,6 @@ class SiteController extends Controller
             $session->setFlash('errorMessages', $user->getErrors());
         }
 
-
         $user->password = '';
         return $this->render('login', [
             'user' => $user,
